@@ -2,18 +2,12 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# =========================
-# 页面设置
-# =========================
 st.set_page_config(
     page_title="深受弯构件承载力预测系统",
     layout="wide",
     page_icon="🧱"
 )
 
-# =========================
-# 页面样式优化
-# =========================
 st.markdown("""
 <style>
 .block-container {
@@ -23,10 +17,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# =========================
-# 1. 加载模型
-# =========================
-@st.cache_resource
 def load_models():
     result = {}
 
@@ -48,9 +38,6 @@ def load_models():
 
 models = load_models()
 
-# =========================
-# 2. 侧边栏输入
-# =========================
 st.sidebar.header("🛠️ 设计参数输入")
 
 beam_type = st.sidebar.radio(
@@ -58,16 +45,12 @@ beam_type = st.sidebar.radio(
     ["实腹深受弯构件", "开洞深受弯构件"]
 )
 
-# =========================
-# 3. 参数输入区
-# =========================
 if beam_type == "实腹深受弯构件":
     with st.sidebar.expander("1. 几何与材料", expanded=True):
         b = st.number_input("截面宽度 $b$ (mm)", value=200.0, step=10.0)
         h = st.number_input("截面高度 $h$ (mm)", value=600.0, step=10.0)
         a_h = st.slider("剪跨比 $a/h$", 0.2, 2.5, 1.0, 0.05)
 
-        st.markdown("---")
         agg_option = st.radio(
             "混凝土/骨料类型 (Aggregate)",
             ("普通混凝土 (Normal)", "轻骨料混凝土 (Lightweight)"),
@@ -82,12 +65,10 @@ if beam_type == "实腹深受弯构件":
     pl = st.sidebar.number_input("配筋率 $\\rho_l$ (%)", value=1.2, step=0.1, format="%.2f")
     fy = st.sidebar.number_input("纵筋屈服强度 $f_y$ (MPa)", value=400.0, step=10.0, format="%.1f")
 
-    st.sidebar.markdown("---")
     st.sidebar.markdown("##### 🔵 竖向腹筋 (箍筋)")
     pv = st.sidebar.number_input("配筋率 $\\rho_v$ (%)", value=0.5, step=0.1, format="%.2f")
     fyv = st.sidebar.number_input("箍筋屈服强度 $f_{yv}$ (MPa)", value=300.0, step=10.0, format="%.1f")
 
-    st.sidebar.markdown("---")
     st.sidebar.markdown("##### 🟠 水平腹筋")
     ph = st.sidebar.number_input("配筋率 $\\rho_h$ (%)", value=0.5, step=0.1, format="%.2f")
     fyh = st.sidebar.number_input("水平筋屈服强度 $f_{yh}$ (MPa)", value=300.0, step=10.0, format="%.1f")
