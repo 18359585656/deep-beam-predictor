@@ -46,7 +46,7 @@ if beam_type == "实腹深受弯构件":
     with st.sidebar.expander("1. 几何与材料", expanded=True):
         b = st.number_input("截面宽度 $b$ (mm)", value=200.0, step=10.0)
         h = st.number_input("截面高度 $h$ (mm)", value=600.0, step=10.0)
-        a_h = st.slider("剪跨比 $a/h$", 0.2, 2.5, 1.0, 0.05)
+        a_h = st.number_input("剪跨比 $a/h$", min_value=0.2, max_value=2.5, value=1.0, step=0.01, format="%.2f")
 
         agg_option = st.radio(
             "混凝土/骨料类型 (Aggregate)",
@@ -94,7 +94,7 @@ if beam_type == "实腹深受弯构件":
 else:
     with st.sidebar.expander("1. 几何与材料", expanded=True):
         b = st.number_input("构件宽度 $b$ (mm)", value=200.0, step=10.0)
-        a_h = st.slider("剪跨比 $a/h$", 0.2, 2.5, 1.0, 0.05)
+        a_h = st.number_input("剪跨比 $a/h$", min_value=0.2, max_value=2.5, value=1.0, step=0.01, format="%.2f")
         fc = st.number_input("混凝土强度 $f_c$ (MPa)", value=30.0, step=5.0)
 
     with st.sidebar.expander("2. 开洞参数", expanded=True):
