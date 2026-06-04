@@ -18,14 +18,12 @@ st.set_page_config(
 )
 
 # ==========================================
-# 路径设置
+# 当前目录
 # ==========================================
 BASE_DIR = os.path.dirname(__file__)
 
-MODEL_DIR = os.path.join(BASE_DIR, "models")
-
 # ==========================================
-# 模型加载
+# 加载模型
 # ==========================================
 @st.cache_resource
 def load_models():
@@ -38,12 +36,12 @@ def load_models():
     try:
 
         solid_model_path = os.path.join(
-            MODEL_DIR,
+            BASE_DIR,
             "solid_model.pkl"
         )
 
         solid_cols_path = os.path.join(
-            MODEL_DIR,
+            BASE_DIR,
             "solid_columns.pkl"
         )
 
@@ -68,12 +66,12 @@ def load_models():
     try:
 
         opening_model_path = os.path.join(
-            MODEL_DIR,
+            BASE_DIR,
             "opening_model.pkl"
         )
 
         opening_cols_path = os.path.join(
-            MODEL_DIR,
+            BASE_DIR,
             "opening_columns.pkl"
         )
 
@@ -100,31 +98,21 @@ models = load_models()
 # ==========================================
 # 调试信息
 # ==========================================
-with st.expander("🔍 调试信息"):
+with st.expander("🔍 调试信息", expanded=False):
 
     st.write("当前目录：")
     st.code(BASE_DIR)
 
-    st.write("根目录文件：")
+    st.write("当前目录文件：")
     st.write(os.listdir(BASE_DIR))
 
-    if os.path.exists(MODEL_DIR):
-
-        st.write("models 文件夹内容：")
-
-        st.write(os.listdir(MODEL_DIR))
-
-    else:
-
-        st.error("❌ 未找到 models 文件夹")
-
 # ==========================================
-# 标题
+# 页面标题
 # ==========================================
 st.title("🧱 深受弯构件受剪承载力智能预测系统")
 
 st.markdown("""
-基于机器学习算法构建的深受弯构件承载力预测平台
+基于机器学习算法构建的深受弯构件受剪承载力预测平台
 """)
 
 st.divider()
@@ -147,9 +135,6 @@ beam_type = st.sidebar.radio(
 # ==========================================
 if beam_type == "实腹深受弯构件":
 
-    # ------------------------------
-    # 几何参数
-    # ------------------------------
     st.sidebar.subheader("几何与材料")
 
     b = st.sidebar.number_input(
@@ -185,9 +170,6 @@ if beam_type == "实腹深受弯构件":
 
     aggregate_val = 1 if aggregate_type == "普通混凝土" else 2
 
-    # ------------------------------
-    # 配筋参数
-    # ------------------------------
     st.sidebar.subheader("配筋参数")
 
     pl = st.sidebar.number_input(
@@ -321,7 +303,7 @@ if model is None or model_cols is None:
     st.error("❌ 模型文件未正确加载")
 
 # ==========================================
-# 预测
+# 开始预测
 # ==========================================
 else:
 
@@ -331,7 +313,7 @@ else:
 
     missing_cols = []
 
-    # 保持训练列顺序
+    # 保持训练时列顺序
     for col in model_cols:
 
         if col in input_df.columns:
@@ -344,14 +326,10 @@ else:
 
             missing_cols.append(col)
 
-    # ------------------------------
     # 页面布局
-    # ------------------------------
     col1, col2 = st.columns([1, 1.5])
 
-    # ------------------------------
     # 左侧
-    # ------------------------------
     with col1:
 
         st.info("### 📝 当前输入参数")
@@ -367,9 +345,7 @@ else:
             use_container_width=True
         )
 
-    # ------------------------------
     # 右侧
-    # ------------------------------
     with col2:
 
         if calc_btn:
